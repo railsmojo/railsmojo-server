@@ -1,24 +1,29 @@
-%p#notice= notice
+.mt-0
+  = render 'articles/side_nav'
+  .sm:ml-64.pt-20.p-4
+    .px-2
+      -# %p.font-normal.text-gray-700.dark:text-gray-400= @article.category.try(:name).try(:humanize)
+      %p.font-normal.text-gray-700.dark:text-gray-400= "Rails #{@article.rails_version.try(:name).try(:humanize)}"
+      %h2.mb-4.text-4xl.font-extrabold.leading-none.tracking-tight.text-gray-900.md:text-4xl.lg:text-4xl.dark:text-white= @article.title
 
-%p
-  %b Category:
-  = @article.category
-%p
-  %b Rails version:
-  = @article.rails_version
-%p
-  %b Key:
-  = @article.key
-%p
-  %b Github link:
-  = @article.github_link
-%p
-  %b Author name:
-  = @article.author_name
-%p
-  %b Piblished at:
-  = @article.piblished_at
+    .grid.grid-cols-12.gap-4.mt-4
+      .col-span-8.p-2
+        .md_content.w-full.block.p-4.bg-white.border.border-gray-200.rounded-lg.shadow.dark:bg-gray-800.dark:border-gray-700
+          = @response.html_safe
+      .col-span-4.p-2
+        %h4.mb-4.text-2xl.font-extrabold.leading-none.tracking-tight.text-gray-900.md:text-2xl.lg:text-2xl.dark:text-white Other Articles
+        .grid.grid-cols-12.gap-4.mt-4
+          - @suggested_articles.each do |article|
+            .col-span-12
+              = link_to article_path(article), class: "block max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" do
+                %h5.mb-2.text-xl.font-bold.tracking-tight.text-gray-900.dark:text-white= article.try(:title)
+                %p.font-normal.text-gray-700.dark:text-gray-400= "Rails #{article.rails_version.try(:name)}"
 
-= link_to 'Edit', edit_article_path(@article)
-\|
-= link_to 'Back', articles_path
+    .flex.justify-between.items-center.my-6.px-2
+      = link_to @previous_article.present? ? article_path(@previous_article) : get_started_articles_path, class: "py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" do
+        %span.mr-2{"aria-hidden" => "true"} ←
+        = @previous_article.present? ? @previous_article.try(:title) : "Get Started"
+        
+      = link_to @next_article.present? ? article_path(@next_article) : what_next_articles_path, class: "py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" do
+        = @next_article.present? ? @next_article.try(:title) : "What Next"
+        %span.ml-2{"aria-hidden" => "true"} →
